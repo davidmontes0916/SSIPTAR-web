@@ -1,0 +1,62 @@
+:root {
+
+    /* =====================================
+       ESTADOS - SEMÁFORO GENERAL
+       ===================================== */
+
+    /* ÉXITO / ACTIVO / APROBADO / COMPLETADO */
+    --status-success: #235B4E;
+    --status-success-dark: #1A443A;
+    --status-success-light: #DFF1E8;
+    --status-success-lighter: #EFF9F3;
+
+
+    /* ADVERTENCIA / PENDIENTE / EN PROCESO */
+    --status-warning: #8A6D1D;
+    --status-warning-dark: #6B5416;
+    --status-warning-light: #FFF3C4;
+    --status-warning-lighter: #FFF9E6;
+
+
+    /* ERROR / CRÍTICO / RECHAZADO */
+    --status-danger: #A52A3A;
+    --status-danger-dark: #7D1F2C;
+    --status-danger-light: #F8DDE1;
+    --status-danger-lighter: #FDF0F2;
+
+
+    /* INFORMACIÓN / NEUTRAL */
+    --status-info: #28627A;
+    --status-info-dark: #1D4A5D;
+    --status-info-light: #DDEFF5;
+    --status-info-lighter: #F0F9FC;
+
+
+    /* INACTIVO / DESHABILITADO */
+    --status-inactive: #5F6B67;
+    --status-inactive-dark: #414A47;
+    --status-inactive-light: #E6EBE9;
+    --status-inactive-lighter: #F4F6F5;
+
+
+    /* =====================================
+       SEMÁFORO NUMÉRICO
+       ÚTIL PARA RIESGOS, PRIORIDADES, ETC.
+       ===================================== */
+
+    --semaforo-verde: #235B4E;
+    --semaforo-verde-bg: #DFF1E8;
+
+    --semaforo-amarillo: #8A6D1D;
+    --semaforo-amarillo-bg: #FFF3C4;
+
+    --semaforo-rojo: #A52A3A;
+    --semaforo-rojo-bg: #F8DDE1;
+
+
+    /* =====================================
+       FOCUS Y ELEMENTOS INTERACTIVOS
+       ===================================== */
+
+    --color-focus: rgba(122, 41, 70, 0.18);
+}

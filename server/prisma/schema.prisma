@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum EstadoUsuario {
+  Pendiente
+  Activo
+  Inactivo
+  Eliminado
+}
+
+enum EstadoRol {
+  Activo
+  Inactivo
+}
+
+model Usuario {
+  id_usuario       Int       @id @default(autoincrement())
+  nombre           String
+  apellido_paterno String
+  apellido_materno String
+  correo           String    @unique
+  contrasena       String
+  telefono_1       String?
+  telefono_2       String?
+  estado           EstadoUsuario @default(Pendiente)
+  fecha_registro   DateTime  @default(now())
+
+  usuario_roles    UsuarioRol[]
+
+  @@map("usuarios")
+}
+
+model Rol {
+  id_rol          Int              @id @default(autoincrement())
+  nombre          String
+  descripcion     String?
+  estado          EstadoRol        @default(Activo)
+
+  usuario_roles   UsuarioRol[]
+  rol_permisos    RolPermiso[]
+
+  @@map("roles")
+}
+
+model UsuarioRol {
+  id_usuario Int
+  id_rol     Int
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
+  rol     Rol     @relation(fields: [id_rol], references: [id_rol])
+
+  @@id([id_usuario, id_rol])
+  @@map("usuario_rol")
+}
+
+model Accion {
+  id_accion       Int       @id @default(autoincrement())
+  nombre          String    // técnico: read, create, update, delete
+  nombre_visible  String    // visible: Consultar, Crear, Editar, Eliminar
+  descripcion     String?
+
+  permisos        Permiso[]
+
+  @@map("acciones")
+}
+
+model Modulo {
+  id_modulo    Int        @id @default(autoincrement())
+  nombre       String
+  descripcion  String?
+  ruta         String?    // ruta frontend
+  icono        String?    // identificador de ícono
+  orden        Int?       // posición en menú lateral
+
+  permisos     Permiso[]
+
+  @@map("modulos")
+}
+
+model Recurso {
+  id_recurso   Int       @id @default(autoincrement())
+  nombre       String
+  descripcion  String?
+
+  permisos     Permiso[]
+
+  @@map("recursos")
+}
+
+model Permiso {
+  id_permiso   Int       @id @default(autoincrement())
+  nombre       String
+  id_modulo    Int
+  id_recurso   Int
+  id_accion    Int
+
+  modulo       Modulo    @relation(fields: [id_modulo], references: [id_modulo])
+  recurso      Recurso   @relation(fields: [id_recurso], references: [id_recurso])
+  accion       Accion    @relation(fields: [id_accion], references: [id_accion])
+  rol_permisos RolPermiso[]
+
+  @@map("permisos")
+}
+
+model RolPermiso {
+  id_rol     Int
+  id_permiso Int
+
+  rol     Rol     @relation(fields: [id_rol], references: [id_rol])
+  permiso Permiso @relation(fields: [id_permiso], references: [id_permiso])
+
+  @@id([id_rol, id_permiso])
+  @@map("rol_permiso")
+}
+
+
+
+model Riesgo {
+  id_riesgo   Int    @id @default(autoincrement())
+  anio        Int
+  numero      Int
+  descripcion String
+  solucion    String?
+
+  @@map("riesgos")
+}

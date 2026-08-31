@@ -1,0 +1,21 @@
+@import "./variables.css";
+@import "./indicadores.css";
+
+body {
+  font-family: var(--font-secondary);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  margin: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+button {
+  font-family: var(--font-primary);
+  border-radius: var(--radius-md);
+  transition: var(--transition-normal);
+}

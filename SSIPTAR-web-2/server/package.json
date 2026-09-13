@@ -24,7 +24,7 @@
     "seed:recursos": "node prisma/seeders/05_recursos_seed.js",
     "seed:modulos": "node prisma/seeders/06_modulos_seed.js",
     "seed:roles": "node prisma/seeders/07_roles_seed.js",
-    "seed:rol-permiso": "node prisma/seeders/08_rol_permiso_seed.js",
+    "seed:rol-permiso": "node prisma/seeders/08_rol_permisos_seed.js",
     "seed:all": "npm run seed:rbac && npm run seed:riesgos && npm run seed:unidades-responsables && npm run seed:acciones && npm run seed:recursos && npm run seed:modulos && npm run seed:roles && npm run seed:rol-permiso"
   }
 }

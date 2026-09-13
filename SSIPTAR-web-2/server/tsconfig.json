@@ -9,5 +9,5 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"]
   },
-  "include": ["src", "server", "prisma.config.ts", "server.js"]
+  "include": ["src", "server", "prisma.config.ts", "src/server.js"]
 }

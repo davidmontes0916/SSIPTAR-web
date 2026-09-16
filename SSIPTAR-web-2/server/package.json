@@ -15,16 +15,6 @@
     "typescript": "^7.0.2"
   },
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "seed:rbac": "node prisma/seeders/01_rbac_seed.js",
-    "seed:riesgos": "node prisma/seeders/02_riesgos_seed.js",
-    "seed:unidades-responsables": "node prisma/seeders/03_unidades_responsables_seed.js",
-    "seed:acciones": "node prisma/seeders/04_acciones_seed.js",
-    "seed:recursos": "node prisma/seeders/05_recursos_seed.js",
-    "seed:modulos": "node prisma/seeders/06_modulos_seed.js",
-    "seed:roles": "node prisma/seeders/07_roles_seed.js",
-    "seed:rol-permiso": "node prisma/seeders/08_rol_permisos_seed.js",
-    "seed:all": "npm run seed:rbac && npm run seed:riesgos && npm run seed:unidades-responsables && npm run seed:acciones && npm run seed:recursos && npm run seed:modulos && npm run seed:roles && npm run seed:rol-permiso"
-  }
+  "seed": "node prisma/seeders/01_modulos_seed.js && node prisma/seeders/02_recursos_seed.js && node prisma/seeders/03_acciones_seed.js && node prisma/seeders/04_permisos_seed.js && node prisma/seeders/05_roles_seed.js && node prisma/seeders/06_rol_permisos_seed.js && node prisma/seeders/07_usuarios_seed.js && node prisma/seeders/08_usuario_rol_seed.js"
+}
 }

@@ -38,7 +38,7 @@ model Usuario {
 
 model Rol {
   id_rol          Int              @id @default(autoincrement())
-  nombre          String
+  nombre          String           @unique
   descripcion     String?
   estado          EstadoRol        @default(Activo)
 
@@ -61,7 +61,7 @@ model UsuarioRol {
 
 model Accion {
   id_accion       Int       @id @default(autoincrement())
-  nombre          String    // técnico: read, create, update, delete
+  nombre          String    @unique // técnico: read, create, update, delete
   nombre_visible  String    // visible: Consultar, Crear, Editar, Eliminar
   descripcion     String?
 
@@ -72,7 +72,7 @@ model Accion {
 
 model Modulo {
   id_modulo    Int        @id @default(autoincrement())
-  nombre       String
+  nombre       String     @unique
   descripcion  String?
   ruta         String?    // ruta frontend
   icono        String?    // identificador de ícono
@@ -85,7 +85,7 @@ model Modulo {
 
 model Recurso {
   id_recurso   Int       @id @default(autoincrement())
-  nombre       String
+  nombre       String    @unique
   descripcion  String?
 
   permisos     Permiso[]

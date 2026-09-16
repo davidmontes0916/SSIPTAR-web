@@ -1,11 +1,8 @@
 const { prisma } = require('../../src/config/prisma');
 
 async function seedRecursoRiesgos() {
-  return await prisma.recurso.create({
-    data: {
-      nombre: 'Riesgos',
-      descripcion: 'Gestión de riesgos identificados en la matriz'
-    }
+  return await prisma.recurso.findUnique({
+    where: { nombre: 'Riesgos' }
   });
 }
 

@@ -19,31 +19,86 @@ enum EstadoRol {
   Inactivo
 }
 
+enum TipoNotificacion {
+  CUENTA
+  AVISO
+  EVIDENCIA
+}
+
+enum EstadoNotificacion {
+  PENDIENTE
+  LEIDA
+}
+
+enum FormatoArchivo {
+  PDF
+  JPEG
+  XLSX
+}
+
+enum TipoArchivo {
+  MATRIZ_RIESGOS
+  PTAR
+  MAPA_RIESGOS
+}
+
+enum FormatoEvidencia {
+  JPEG
+  PNG
+  PDF
+}
+
+enum EstadoEvidencia {
+  PENDIENTE
+  EN_REVISION
+  APROBADO
+  RECHAZADO
+}
+
 model Usuario {
-  id_usuario       Int       @id @default(autoincrement())
-  nombre           String
-  apellido_paterno String
-  apellido_materno String
-  correo           String    @unique
-  contrasena       String
-  telefono_1       String?
-  telefono_2       String?
+  id_usuario       Int           @id @default(autoincrement())
+  nombre           String        @db.VarChar(100)
+  apellido_paterno String        @db.VarChar(100)
+  apellido_materno String?       @db.VarChar(100)
+  correo           String        @unique @db.VarChar(150)
+  contrasena       String        @db.VarChar(255)
+  telefono_1       String?       @db.VarChar(20)
+  telefono_2       String?       @db.VarChar(20)
   estado           EstadoUsuario @default(Pendiente)
-  fecha_registro   DateTime  @default(now())
+  fecha_registro   DateTime      @default(now())
 
-  usuario_roles    UsuarioRol[]
+  id_unidad_administrativa Int?
 
+  unidad_administrativa UnidadesAdministrativas? @relation(fields: [id_unidad_administrativa], references: [id_unidad_administrativa])
+
+  usuario_roles UsuarioRol[]
+
+  notificaciones_recibidas Notificacion[] @relation("UsuarioDestinatario")
+  notificaciones_enviadas  Notificacion[] @relation("UsuarioOrigen")
+
+  tokens_verificacion TokenVerificacion[]
+
+  archivos Archivo[]
+
+  evidencias_reportadas Evidencia[] @relation("UsuarioReporta")
+  evidencias_revisadas  Evidencia[] @relation("UsuarioRevisa")
+
+  comentarios Comentario[]
+
+  informes Informe[]
+
+  @@index([id_unidad_administrativa])
   @@map("usuarios")
 }
 
 model Rol {
-  id_rol          Int              @id @default(autoincrement())
-  nombre          String           @unique
-  descripcion     String?
-  estado          EstadoRol        @default(Activo)
+  id_rol      Int       @id @default(autoincrement())
+  nombre      String    @unique @db.VarChar(100)
+  descripcion String?   @db.Text
+  estado      EstadoRol @default(Activo)
 
-  usuario_roles   UsuarioRol[]
-  rol_permisos    RolPermiso[]
+  usuario_roles UsuarioRol[]
+  rol_permisos  RolPermiso[]
 
   @@map("roles")
 }
@@ -52,59 +107,64 @@ model UsuarioRol {
   id_usuario Int
   id_rol     Int
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
-  rol     Rol     @relation(fields: [id_rol], references: [id_rol])
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+  rol     Rol     @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
 
   @@id([id_usuario, id_rol])
+  @@index([id_rol])
   @@map("usuario_rol")
 }
 
 model Accion {
-  id_accion       Int       @id @default(autoincrement())
-  nombre          String    @unique // técnico: read, create, update, delete
-  nombre_visible  String    // visible: Consultar, Crear, Editar, Eliminar
-  descripcion     String?
+  id_accion      Int     @id @default(autoincrement())
+  nombre         String  @db.VarChar(100)
+  nombre_visible String  @db.VarChar(100)
+  descripcion    String? @db.Text
 
-  permisos        Permiso[]
+  permisos Permiso[]
 
   @@map("acciones")
 }
 
 model Modulo {
-  id_modulo    Int        @id @default(autoincrement())
-  nombre       String     @unique
-  descripcion  String?
-  ruta         String?    // ruta frontend
-  icono        String?    // identificador de ícono
-  orden        Int?       // posición en menú lateral
+  id_modulo   Int     @id @default(autoincrement())
+  nombre      String  @db.VarChar(150)
+  descripcion String? @db.VarChar(191)
+  ruta        String? @db.VarChar(191)
+  icono       String? @db.VarChar(191)
 
-  permisos     Permiso[]
+  permisos Permiso[]
 
   @@map("modulos")
 }
 
 model Recurso {
-  id_recurso   Int       @id @default(autoincrement())
-  nombre       String    @unique
-  descripcion  String?
+  id_recurso  Int     @id @default(autoincrement())
+  nombre      String  @db.VarChar(191)
+  descripcion String? @db.VarChar(191)
 
-  permisos     Permiso[]
+  permisos Permiso[]
 
   @@map("recursos")
 }
 
 model Permiso {
-  id_permiso   Int       @id @default(autoincrement())
-  nombre       String
-  id_modulo    Int
-  id_recurso   Int
-  id_accion    Int
+  id_permiso Int    @id @default(autoincrement())
+  nombre     String @unique @db.VarChar(100)
 
-  modulo       Modulo    @relation(fields: [id_modulo], references: [id_modulo])
-  recurso      Recurso   @relation(fields: [id_recurso], references: [id_recurso])
-  accion       Accion    @relation(fields: [id_accion], references: [id_accion])
+  id_modulo  Int
+  id_recurso Int
+  id_accion  Int
+
+  modulo  Modulo  @relation(fields: [id_modulo], references: [id_modulo])
+  recurso Recurso @relation(fields: [id_recurso], references: [id_recurso])
+  accion  Accion  @relation(fields: [id_accion], references: [id_accion])
+
   rol_permisos RolPermiso[]
 
+  @@index([id_modulo])
+  @@index([id_recurso])
+  @@index([id_accion])
   @@map("permisos")
 }
 
@@ -112,21 +172,193 @@ model RolPermiso {
   id_rol     Int
   id_permiso Int
 
-  rol     Rol     @relation(fields: [id_rol], references: [id_rol])
-  permiso Permiso @relation(fields: [id_permiso], references: [id_permiso])
+  rol     Rol     @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
+  permiso Permiso @relation(fields: [id_permiso], references: [id_permiso], onDelete: Cascade)
 
   @@id([id_rol, id_permiso])
+  @@index([id_permiso])
   @@map("rol_permiso")
 }
 
+model UnidadesAdministrativas {
+  id_unidad_administrativa Int    @id @default(autoincrement())
+  nombre                   String @unique @db.VarChar(150)
 
+  usuarios Usuario[]
+
+  acciones_control AccionControl[]
+
+  @@map("unidades_administrativas")
+}
+
+model Notificacion {
+  id_notificacion Int                @id @default(autoincrement())
+  tipo            TipoNotificacion
+  mensaje         String             @db.Text
+  fecha_envio     DateTime           @default(now())
+  estado          EstadoNotificacion @default(PENDIENTE)
+
+  id_usuario_destinatario Int
+  id_usuario_origen       Int?
+
+  usuario_destinatario Usuario  @relation("UsuarioDestinatario", fields: [id_usuario_destinatario], references: [id_usuario])
+  usuario_origen       Usuario? @relation("UsuarioOrigen", fields: [id_usuario_origen], references: [id_usuario])
+
+  @@index([id_usuario_destinatario])
+  @@index([id_usuario_origen])
+  @@map("notificaciones")
+}
+
+model TokenVerificacion {
+  id_token  Int      @id @default(autoincrement())
+  codigo    String   @db.VarChar(10)
+  expira_en DateTime
+  usado     Boolean  @default(false)
+
+  id_usuario Int
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@index([id_usuario])
+  @@map("tokens_verificacion")
+}
+
+model Archivo {
+  id_archivo   Int            @id @default(autoincrement())
+  nombre       String         @db.VarChar(200)
+  formato      FormatoArchivo
+  tipo         TipoArchivo
+  ruta         String         @db.VarChar(255)
+  fecha_subida DateTime       @default(now())
+
+  id_usuario Int
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@index([id_usuario])
+  @@map("archivos")
+}
 
 model Riesgo {
-  id_riesgo   Int    @id @default(autoincrement())
+  id_riesgo   Int     @id @default(autoincrement())
   anio        Int
   numero      Int
-  descripcion String
-  solucion    String?
+  descripcion String  @db.Text
+  solucion    String? @db.Text
+
+  acciones_control AccionControl[]
 
   @@map("riesgos")
+}
+
+model AccionControl {
+  id_accion Int @id @default(autoincrement())
+
+  id_riesgo Int
+  numero    Int
+
+  descripcion         String  @db.Text
+  medios_verificacion String? @db.Text
+
+  id_unidad_administrativa Int
+  id_responsable           Int
+
+  fecha_inicio  DateTime
+  fecha_termino DateTime
+
+  porcentaje_acumulado Float   @default(0)
+  cumplida             Boolean @default(false)
+
+  riesgo                Riesgo                  @relation(fields: [id_riesgo], references: [id_riesgo], onDelete: Cascade)
+  unidad_administrativa UnidadesAdministrativas @relation(fields: [id_unidad_administrativa], references: [id_unidad_administrativa])
+  responsable           Responsable             @relation(fields: [id_responsable], references: [id_responsable])
+
+  reportes_trimestrales ReporteTrimestral[]
+
+  @@index([id_riesgo])
+  @@index([id_unidad_administrativa])
+  @@index([id_responsable])
+  @@map("acciones_control")
+}
+
+model ReporteTrimestral {
+  id_reporte Int @id @default(autoincrement())
+
+  id_accion Int
+  trimestre Int
+
+  porcentaje_avance_trimestral Float   @default(0)
+  observaciones                String? @db.Text
+
+  accion AccionControl @relation(fields: [id_accion], references: [id_accion], onDelete: Cascade)
+
+  evidencias  Evidencia[]
+  comentarios Comentario[]
+
+  @@index([id_accion])
+  @@map("reportes_trimestrales")
+}
+
+model Evidencia {
+  id_evidencia Int @id @default(autoincrement())
+
+  id_reporte Int
+
+  formato FormatoEvidencia
+  ruta    String           @db.VarChar(255)
+  estado  EstadoEvidencia  @default(PENDIENTE)
+
+  id_usuario_reporta Int
+  id_usuario_revisa  Int?
+
+  comentarios String? @db.Text
+
+  reporte         ReporteTrimestral @relation(fields: [id_reporte], references: [id_reporte], onDelete: Cascade)
+  usuario_reporta Usuario           @relation("UsuarioReporta", fields: [id_usuario_reporta], references: [id_usuario])
+  usuario_revisa  Usuario?          @relation("UsuarioRevisa", fields: [id_usuario_revisa], references: [id_usuario])
+
+  comentarios_registrados Comentario[]
+
+  @@index([id_reporte])
+  @@index([id_usuario_reporta])
+  @@index([id_usuario_revisa])
+  @@map("evidencias")
+}
+
+model Comentario {
+  id_comentario Int      @id @default(autoincrement())
+  contenido     String   @db.Text
+  fecha         DateTime @default(now())
+
+  id_usuario   Int
+  id_reporte   Int?
+  id_evidencia Int?
+
+  usuario           Usuario            @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+  reporte_trimestre ReporteTrimestral? @relation(fields: [id_reporte], references: [id_reporte], onDelete: Cascade)
+  evidencia         Evidencia?         @relation(fields: [id_evidencia], references: [id_evidencia], onDelete: Cascade)
+
+  @@index([id_usuario])
+  @@index([id_reporte])
+  @@index([id_evidencia])
+  @@map("comentarios")
+}
+
+model Informe {
+  id_informe Int @id @default(autoincrement())
+
+  id_usuario Int
+  usuario    Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@index([id_usuario])
+  @@map("informes")
+}
+
+model Responsable {
+  id_responsable Int    @id @default(autoincrement())
+  nombre         String @unique @db.VarChar(150)
+
+  acciones_control AccionControl[]
+
+  @@map("responsables")
 }

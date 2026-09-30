@@ -1,20 +1,21 @@
 {
   "dependencies": {
-    "@prisma/client": "^6.19.3",
+    "@prisma/client": "^6.16.2"
+  },
+  "devDependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "prisma": "^6.19.3"
-  },
-  "devDependencies": {
+    "prisma": "^6.16.2",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.3.0",
     "typescript": "^7.0.2"
   },
   "scripts": {
-  "seed": "node prisma/seeders/01_modulos_seed.js && node prisma/seeders/02_recursos_seed.js && node prisma/seeders/03_acciones_seed.js && node prisma/seeders/04_permisos_seed.js && node prisma/seeders/05_roles_seed.js && node prisma/seeders/06_rol_permisos_seed.js && node prisma/seeders/07_usuarios_seed.js && node prisma/seeders/08_usuario_rol_seed.js"
-}
+    "start": "node server.js",
+    "seed": "node prisma/seeders/01_modulos_seed.js && node prisma/seeders/02_recursos_seed.js && node prisma/seeders/03_acciones_seed.js && node prisma/seeders/04_permisos_seed.js && node prisma/seeders/05_roles_seed.js && node prisma/seeders/06_rol_permisos_seed.js && node prisma/seeders/07_usuarios_seed.js && node prisma/seeders/08_usuario_rol_seed.js"
+  }
 }

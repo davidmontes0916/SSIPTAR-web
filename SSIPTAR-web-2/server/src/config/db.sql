@@ -42,3 +42,6 @@ INSERT INTO rol_permiso (id_rol, id_permiso) VALUES (1, 5);
 -- 7. Vincular usuario con rol Administrador
 INSERT INTO usuario_rol (id_usuario, id_rol)
 VALUES (1, 1);
+
+drop database ssiptar;
+create database ssiptar;

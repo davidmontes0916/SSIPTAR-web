@@ -6,15 +6,13 @@ async function seedModulos() {
       nombre: 'Dashboard administrativo',
       descripcion: 'Panel principal de administración',
       ruta: '/dashboard',
-      icono: 'dashboard',
-      orden: 1
+      icono: 'dashboard'
     },
     {
       nombre: 'Matriz de seguimiento',
       descripcion: 'Gestión de riesgos y acciones de control',
       ruta: '/matriz',
-      icono: 'table',
-      orden: 2
+      icono: 'table'
     }
   ];
 
